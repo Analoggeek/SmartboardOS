@@ -900,3 +900,24 @@ html[data-theme="dark"] .pagecard{ background:#1a1d2e; }
 html[data-wallpaper="paper"] .card{ background: color-mix(in srgb, #fff8ea 82%, transparent); }
 html[data-wallpaper="paper"] .hero__sub,
 html[data-wallpaper="paper"] .cheats div{ color:#5a4a36; }
+
+/* 14 · Desktop polish: fading grid + card gloss ---------------------------- */
+.shell::before{
+  content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 48px 48px;
+  -webkit-mask-image: radial-gradient(ellipse at 50% 28%, #000 12%, transparent 72%);
+  mask-image: radial-gradient(ellipse at 50% 28%, #000 12%, transparent 72%);
+  opacity:.55;
+}
+.card{ isolation:isolate; }
+.card::after{
+  content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none; z-index:0;
+  background: radial-gradient(260px circle at var(--gx, 50%) var(--gy, 40%), rgba(255,255,255,.11), transparent 62%);
+  opacity:0; transition: opacity .3s var(--ease);
+}
+.card:hover::after{ opacity:1; }
+.card > *{ position:relative; z-index:1; }
+@media (prefers-reduced-motion: reduce){ .card::after{ display:none; } }
