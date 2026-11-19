@@ -1,0 +1,29 @@
+{
+  "name": "SmartBoardOS — the teacher's hub",
+  "short_name": "SmartBoardOS",
+  "description": "An offline-first teaching workspace: whiteboard, PDF studio, class tools, 3D lab, notes and calculator. All data stays on your device.",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
+  "background_color": "#080a12",
+  "theme_color": "#080a12",
+  "categories": ["education", "productivity"],
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    { "src": "./assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./assets/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "./assets/icons/apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" }
+  ],
+  "shortcuts": [
+    { "name": "Whiteboard", "short_name": "Board", "description": "Open the whiteboard", "url": "./?app=board" },
+    { "name": "PDF Studio", "short_name": "PDF", "description": "Present a PDF", "url": "./?app=pdf" },
+    { "name": "Class Tools", "short_name": "Class", "description": "Picker, timer and scores", "url": "./?app=class" },
+    { "name": "3D Lab", "short_name": "3D", "description": "Teaching models in 3D", "url": "./?app=lab3d" },
+    { "name": "Notes", "short_name": "Notes", "description": "Lesson notes", "url": "./?app=notes" }
+  ]
+}

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-accent="violet" data-wallpaper="aurora" data-motion="on">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>SmartBoardOS — the teacher's hub</title>
+<meta name="description" content="SmartBoardOS is an offline-first teaching workspace: whiteboard, PDF studio, class tools, 3D lab, notes and more. Everything stays on your device." />
+<meta name="theme-color" content="#080a12" />
+<meta name="color-scheme" content="dark light" />
+<link rel="manifest" href="./manifest.webmanifest" />
+<link rel="icon" href="./assets/icons/favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="./assets/icons/icon-192.png" sizes="192x192" type="image/png" />
+<link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="SmartBoardOS" />
+<link rel="stylesheet" href="./css/styles.css" />
+</head>
+<body>
+
+<!-- ····· Boot sequence ····· -->
+<div class="boot" id="boot" aria-hidden="true">
+  <div class="boot__inner">
+    <svg class="boot__logo" width="76" height="76" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+      <rect x="3" y="3" width="58" height="58" rx="16" fill="url(#bootg)" />
+      <rect x="14" y="17" width="36" height="26" rx="4" stroke="#fff" stroke-width="2.4" opacity=".9"/>
+      <path d="M24 48h16" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".75"/>
+      <path d="M22 30l7 5-7 5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      <defs><linearGradient id="bootg" x1="3" y1="3" x2="61" y2="61">
+        <stop stop-color="#8b7dff"/><stop offset="1" stop-color="#35c3f0"/></linearGradient></defs>
+    </svg>
+    <div class="boot__mark">SmartBoard<span>OS</span></div>
+    <div class="boot__sub">the teacher's hub</div>
+    <div class="boot__bar"><i id="bootbar"></i></div>
+  </div>
+</div>
+
+<div class="shell is-booting" id="shell">
+
+  <!-- ····· Top bar ····· -->
+  <header class="topbar">
+    <button class="brand" id="brand" title="SmartBoardOS home" aria-label="SmartBoardOS home">
+      <svg class="brand__logo" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+        <rect x="3" y="3" width="58" height="58" rx="16" fill="url(#brandg)"/>
+        <rect x="14" y="17" width="36" height="26" rx="4" stroke="#fff" stroke-width="2.4" opacity=".9"/>
+        <path d="M24 48h16" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".75"/>
+        <path d="M22 30l7 5-7 5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs><linearGradient id="brandg" x1="3" y1="3" x2="61" y2="61">
+          <stop stop-color="#8b7dff"/><stop offset="1" stop-color="#35c3f0"/></linearGradient></defs>
+      </svg>
+      <span class="brand__name">SmartBoard<span>OS</span></span>
+    </button>
+    <span class="chip chip--tagline" id="tagline">Offline-first classroom OS · data stays on device</span>
+
+    <div class="topbar__spacer"></div>
+
+    <button class="searchbtn" id="openPalette" aria-label="Search apps and actions (Ctrl K)" title="Search — Ctrl/⌘ K">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.6-3.6" stroke-linecap="round"/></svg>
+      <span>Search…</span><kbd>⌘K</kbd>
+    </button>
+
+    <div class="topbar__clock" id="topclock" title="Local time">
+      <b id="clockTime">--:--</b><small id="clockDate">—</small>
+    </div>
+
+    <button class="iconbtn" id="themeBtn" aria-label="Toggle theme" title="Toggle light / dark theme">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+    </button>
+    <button class="iconbtn" id="fsBtn" aria-label="Toggle fullscreen" title="Fullscreen — F">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M4 9V4h5M20 15v5h-5M15 4h5v5M9 20H4v-5"/></svg>
+    </button>
+    <button class="iconbtn" id="settingsBtn" aria-label="Open settings" title="Settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.05A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.05A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6 1.7 1.7 0 0 0 10 3.05V3a2 2 0 1 1 4 0v.05A1.7 1.7 0 0 0 15 4.6a1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9v.05a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.05a1.7 1.7 0 0 0-1.55 1Z"/></svg>
+    </button>
+  </header>
+
+  <!-- ····· Desktop ····· -->
+  <main class="desktop" id="desktop">
+
+    <section class="card hero" id="hero">
+      <div class="hero__grid">
+        <div>
+          <h1 id="greeting">Good morning, teach.</h1>
+          <p class="hero__sub">Your whole classroom fits in this tab — draw, present, quiz and explain. No accounts, no uploads, no internet needed.</p>
+          <div class="hero__actions">
+            <button class="btn btn--primary" data-action="open-board">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18v11H3z"/><path d="M8 20h8M12 16v4"/></svg>
+              Open whiteboard
+            </button>
+            <button class="btn" data-action="open-pdf">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2h8l4 4v16H6z"/><path d="M14 2v4h4"/></svg>
+              Present a PDF
+            </button>
+            <button class="btn" data-action="open-class">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 20v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M22 20v-2a4 4 0 0 0-3-3.9"/></svg>
+              Class tools
+            </button>
+          </div>
+        </div>
+        <div class="hero__aside">
+          <div class="cube" id="cube" aria-hidden="true"></div>
+          <div class="hero__stats">
+            <div class="stat"><b id="statPages">0</b><small>pages</small></div>
+            <div class="stat"><b id="statNotes">0</b><small>notes</small></div>
+            <div class="stat"><b id="statMedia">0</b><small>media</small></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card quick">
+      <div class="card__title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>
+        Quick launch
+      </div>
+      <div class="quickgrid" id="quickgrid"></div>
+    </section>
+
+    <div class="mini">
+      <section class="card card--pad">
+        <div class="card__title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M14.7 6.3a4.5 4.5 0 0 1-6 6L4 17v3h3l4.7-4.7a4.5 4.5 0 0 1 6-6l-3 3 2 2 3-3Z"/></svg>
+          Teaching toolbox
+        </div>
+        <div class="tiles" id="toolboxGrid"></div>
+      </section>
+
+      <section class="card card--pad">
+        <div class="card__title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h.01M10 10h.01M14 10h.01M18 10h.01M7 14h10"/></svg>
+          Teacher shortcuts
+        </div>
+        <div class="cheats">
+          <div><span>Command palette</span><kbd>Ctrl K</kbd></div>
+          <div><span>Whiteboard</span><kbd>Ctrl Shift W</kbd></div>
+          <div><span>PDF studio</span><kbd>Ctrl Shift P</kbd></div>
+          <div><span>Class tools</span><kbd>Ctrl Shift T</kbd></div>
+          <div><span>Pen / Highlighter</span><kbd>P</kbd><kbd>H</kbd></div>
+          <div><span>Brush size</span><kbd>[</kbd><kbd>]</kbd></div>
+          <div><span>Undo / redo</span><kbd>Ctrl Z</kbd><kbd>⇧ Ctrl Z</kbd></div>
+        </div>
+      </section>
+
+      <section class="card card--pad">
+        <div class="card__title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="m7 14 3-4 3 3 4-6"/></svg>
+          Class snapshot
+        </div>
+        <div class="snapshot__rows">
+          <div><span>Board pages</span><b id="snapPages">0</b></div>
+          <div><span>Objects on board</span><b id="snapObjects">0</b></div>
+          <div><span>Last autosave</span><b id="snapSaved">never</b></div>
+          <div><span>3D models</span><b>14</b></div>
+        </div>
+        <div class="snapshot__actions">
+          <button class="btn btn--sm" data-action="open-lab">Open 3D Lab</button>
+          <button class="btn btn--sm" data-action="export-pdf">Export board PDF</button>
+        </div>
+      </section>
+    </div>
+
+    <aside class="widgets" id="widgets" aria-label="Desktop widgets">
+      <div class="widgets__head"><span>Widgets</span><span id="widgetCount"></span></div>
+      <div id="widgetsList" style="display:grid;gap:14px"></div>
+      <div class="waddrow" id="widgetAddRow"></div>
+    </aside>
+
+  </main>
+
+  <!-- ····· Dock ····· -->
+  <nav class="dock" id="dock" aria-label="Application dock"></nav>
+</div>
+
+<!-- ····· Window layer ····· -->
+<div class="windows" id="windowsLayer"></div>
+
+<!-- ····· Command palette ····· -->
+<div class="palette" id="palette" hidden role="dialog" aria-modal="true" aria-label="Command palette">
+  <div class="palette__box">
+    <input class="palette__input" id="paletteInput" type="text" placeholder="Search apps and actions…" autocomplete="off" spellcheck="false" aria-controls="paletteList" aria-label="Search apps and actions" />
+    <ul class="palette__list" id="paletteList" role="listbox" aria-label="Results"></ul>
+  </div>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+<script src="./vendor/jspdf.umd.min.js"></script>
+<script src="./vendor/pdf.min.js"></script>
+<script type="module" src="./js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 700" width="1100" height="700" font-family="Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif">
+  <defs>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8b7dff"/><stop offset="1" stop-color="#5ad1ff"/></linearGradient>
+    <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M32 0H0V32" fill="none" stroke="#e3e9f7" stroke-width="1"/>
+    </pattern>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%"><feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#000" flood-opacity=".35"/></filter>
+    <style>
+      .txt{fill:#1a2233}
+      .small{font-size:11px;fill:#6f7695}
+      .badge{fill:#0e1020;stroke:#ffffff22}
+      .tbtn{fill:#ffffff0b;stroke:#ffffff16}
+    </style>
+  </defs>
+
+  <rect width="1100" height="700" rx="18" fill="#0b0c14"/>
+  <text x="18" y="20" font-size="11" fill="#8f97b8">Whiteboard — window chrome (traffic lights show their glyph on hover)</text>
+
+  <!-- window header -->
+  <rect x="0" y="28" width="1100" height="42" fill="#0f1120"/>
+  <circle cx="20" cy="49" r="6.5" fill="#ff5f57"/><circle cx="42" cy="49" r="6.5" fill="#febc2e"/><circle cx="64" cy="49" r="6.5" fill="#28c840"/>
+  <path d="M8 44h5" stroke="#00000055" stroke-width="1.4" stroke-linecap="round" opacity="0"/>
+  <rect x="92" y="42" width="14" height="12" rx="2" fill="none" stroke="#8b7dff" stroke-width="1.6"/>
+  <text x="114" y="53" font-size="12.5" font-weight="620" fill="#9aa1c0">Whiteboard</text>
+  <text x="184" y="53" font-size="10.5" fill="#6f7695">Draw, annotate, teach</text>
+  <line x1="0" y1="70" x2="1100" y2="70" stroke="#ffffff17"/>
+
+  <!-- toolbar -->
+  <rect x="0" y="70" width="1100" height="46" fill="#12141f"/>
+  <g>
+    <rect x="12" y="78" width="30" height="30" rx="8" class="tbtn"/><path d="M20 85l14 6-6 2-2 6z" fill="#c9c0ff"/>
+    <rect x="46" y="78" width="30" height="30" rx="8" fill="#8b7dff33" stroke="#8b7dff77"/><path d="M56 86l10 10-4 4-10-10z" fill="#e2dcff"/>
+    <rect x="80" y="78" width="30" height="30" rx="8" class="tbtn"/><path d="M89 92h12v5H89z" fill="#a9f0c4"/>
+    <rect x="114" y="78" width="30" height="30" rx="8" class="tbtn"/><path d="M123 86l10 10-6 6-10-10z" fill="#ffb3bf"/>
+    <rect x="148" y="78" width="30" height="30" rx="8" class="tbtn"/><circle cx="163" cy="93" r="5" fill="none" stroke="#ff9db0" stroke-width="2"/>
+    <rect x="182" y="78" width="30" height="30" rx="8" class="tbtn"/><path d="M191 86h12M197 86v14M194 100h6" stroke="#c9d3e6" stroke-width="1.6" fill="none"/>
+    <rect x="216" y="78" width="30" height="30" rx="8" class="tbtn"/><path d="M222 100l14-14M229 86h7v7" stroke="#c9d3e6" stroke-width="1.6" fill="none"/>
+    <rect x="250" y="78" width="30" height="30" rx="8" class="tbtn"/><rect x="257" y="85" width="16" height="14" rx="2" fill="none" stroke="#c9d3e6" stroke-width="1.6"/>
+    <rect x="284" y="78" width="30" height="30" rx="8" class="tbtn"/><ellipse cx="299" cy="93" rx="8" ry="6.5" fill="none" stroke="#c9d3e6" stroke-width="1.6"/>
+    <rect x="318" y="78" width="30" height="30" rx="8" class="tbtn"/><path d="M331 86v14M324 86h14" stroke="#c9d3e6" stroke-width="1.6" fill="none"/>
+    <rect x="352" y="78" width="30" height="30" rx="8" class="tbtn"/><path d="M359 100V88a1.5 1.5 0 013 0v12" fill="none" stroke="#c9d3e6" stroke-width="1.6"/>
+    <line x1="392" y1="82" x2="392" y2="104" stroke="#ffffff22"/>
+    <circle cx="408" cy="93" r="9" fill="#1a2233" stroke="#ffffff33"/><circle cx="432" cy="93" r="9" fill="#e5484d"/>
+    <circle cx="456" cy="93" r="9" fill="#2563eb"/><circle cx="480" cy="93" r="9" fill="#0f9d6b"/>
+    <circle cx="504" cy="93" r="9" fill="#ea8c00"/><circle cx="528" cy="93" r="9" fill="#8b5cf6"/>
+    <rect x="552" y="87" width="76" height="12" rx="6" fill="#ffffff14"/><circle cx="580" cy="93" r="9" fill="#eef0ff"/>
+    <line x1="644" y1="82" x2="644" y2="104" stroke="#ffffff22"/>
+    <rect x="656" y="83" width="22" height="22" rx="6" class="tbtn"/><path d="M662 94h10" stroke="#c9d3e6" stroke-width="1.7"/>
+    <rect x="684" y="83" width="22" height="22" rx="6" class="tbtn"/><path d="M690 94h10" stroke="#c9d3e6" stroke-width="1.7" opacity=".5"/>
+    <rect x="716" y="83" width="54" height="22" rx="6" class="tbtn"/><text x="724" y="98" font-size="10" fill="#c9d3e6">page 2/5</text>
+    <rect x="900" y="83" width="86" height="22" rx="6" class="tbtn"/><text x="910" y="98" font-size="10" fill="#c9d3e6">Send to PDF</text>
+    <rect x="994" y="83" width="90" height="22" rx="6" fill="url(#accent)"/><text x="1006" y="98" font-size="10" font-weight="650" fill="#0b0b16">Export PDF</text>
+  </g>
+  <line x1="0" y1="116" x2="1100" y2="116" stroke="#ffffff17"/>
+
+  <!-- canvas -->
+  <rect x="0" y="116" width="1100" height="508" fill="#ffffff"/>
+  <rect x="0" y="116" width="1100" height="508" fill="url(#grid)"/>
+
+  <!-- lesson content -->
+  <text x="60" y="178" font-size="30" font-weight="750" fill="#1a2233" letter-spacing="-.8">Fractions — today’s plan</text>
+  <path d="M60 196h430" stroke="#8b7dff" stroke-width="5" stroke-linecap="round"/>
+  <text x="60" y="240" font-size="16" fill="#33405a">1. What is a numerator?</text>
+  <text x="60" y="270" font-size="16" fill="#33405a">2. Draw 3/4 on the grid</text>
+  <text x="60" y="300" font-size="16" fill="#33405a">3. Compare 1/2 and 2/3</text>
+
+  <rect x="500" y="196" width="230" height="150" rx="8" fill="none" stroke="#2563eb" stroke-width="3"/>
+  <path d="M500 246h230M500 296h230M558 196v150M616 196v150M674 196v150" stroke="#9fb4dd" stroke-width="2"/>
+  <rect x="500" y="196" width="172" height="150" fill="#2563eb" opacity=".14"/>
+  <text x="615" y="382" font-size="14" fill="#33405a" text-anchor="middle">3/4 shaded</text>
+
+  <path d="M70 420c40-34 70 18 108-8s66 12 96-12 62 6 96-18" fill="none" stroke="#ea8c00" stroke-width="7" stroke-linecap="round"/>
+  <path d="M70 462c50-10 92 22 140 2s82 14 128-6" fill="none" stroke="#e5484d" stroke-width="3" stroke-linecap="round"/>
+  <path d="M70 500h300" stroke="#0f9d6b" stroke-width="18" stroke-linecap="round" opacity=".33"/>
+
+  <text x="790" y="240" font-size="22" fill="#8b5cf6" font-weight="700">1/2 &lt; 2/3</text>
+  <path d="M792 256l120 8" stroke="#8b5cf6" stroke-width="3" stroke-linecap="round"/>
+  <path d="M830 330c0-25 34-25 34 0 0 14-17 14-17 30M847 384v.5" stroke="#f59e0b" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <g transform="translate(940,330)"><circle r="30" fill="#fff2b8"/><circle cx="-10" cy="-6" r="3.2" fill="#3a2a10"/><circle cx="10" cy="-6" r="3.2" fill="#3a2a10"/><path d="M-12 8q12 11 24 0" fill="none" stroke="#3a2a10" stroke-width="3" stroke-linecap="round"/></g>
+  <text x="940" y="388" font-size="11" fill="#6f7695" text-anchor="middle">sticker</text>
+
+  <!-- selection bbox -->
+  <rect x="492" y="188" width="246" height="166" fill="none" stroke="#6b7cff" stroke-width="1.6" stroke-dasharray="7 6"/>
+  <rect x="732" y="348" width="12" height="12" fill="#6b7cff"/>
+
+  <!-- badges + zoom -->
+  <rect x="14" y="578" width="92" height="26" rx="13" class="badge"/><text x="26" y="595" font-size="11" fill="#c9d3e6">Pen</text>
+  <rect x="112" y="578" width="92" height="26" rx="13" class="badge"/><text x="124" y="595" font-size="11" fill="#c9d3e6">page 2 / 5</text>
+  <rect x="210" y="578" width="112" height="26" rx="13" class="badge"/><text x="222" y="595" font-size="11" fill="#c9d3e6">14 objects</text>
+  <rect x="944" y="574" width="142" height="32" rx="10" class="badge"/>
+  <text x="958" y="595" font-size="12" fill="#c9d3e6">−</text><text x="1012" y="595" font-size="11" fill="#c9d3e6" text-anchor="middle">100%</text><text x="1060" y="595" font-size="12" fill="#c9d3e6">+</text>
+
+  <!-- floating toolbox -->
+  <rect x="392" y="536" width="330" height="50" rx="14" fill="#151828" stroke="#ffffff22" filter="url(#soft)"/>
+  <g>
+    <path d="M402 553v16M408 553v16M414 553v16" stroke="#6f7695" stroke-width="2"/>
+    <rect x="424" y="544" width="34" height="34" rx="9" class="tbtn"/><path d="M432 551l14 6-6 2-2 6z" fill="#c9c0ff"/>
+    <rect x="462" y="544" width="34" height="34" rx="9" fill="#8b7dff33" stroke="#8b7dff77"/><path d="M473 552l10 10-4 4-10-10z" fill="#e2dcff"/>
+    <rect x="500" y="544" width="34" height="34" rx="9" class="tbtn"/><path d="M510 558h12v5h-12z" fill="#a9f0c4"/>
+    <rect x="538" y="544" width="34" height="34" rx="9" class="tbtn"/><path d="M548 552l10 10-6 6-10-10z" fill="#ffb3bf"/>
+    <rect x="576" y="544" width="34" height="34" rx="9" class="tbtn"/><circle cx="593" cy="561" r="5" fill="none" stroke="#ff9db0" stroke-width="2"/>
+    <rect x="614" y="544" width="34" height="34" rx="9" class="tbtn"/><path d="M624 551h12M630 551v14M627 565h6" stroke="#c9d3e6" stroke-width="1.5" fill="none"/>
+    <rect x="652" y="544" width="34" height="34" rx="9" class="tbtn"/><circle cx="669" cy="561" r="7" fill="#ffd76e"/>
+    <rect x="690" y="544" width="26" height="34" rx="8" class="tbtn"/><path d="M698 552h10M703 552v14" stroke="#c9d3e6" stroke-width="1.6" fill="none"/>
+  </g>
+
+  <!-- page strip -->
+  <rect x="0" y="624" width="1100" height="76" fill="#12141f"/>
+  <g>
+    <rect x="14" y="634" width="104" height="52" rx="8" fill="#1c2033" stroke="#ffffff22"/>
+    <rect x="20" y="640" width="92" height="34" rx="4" fill="#fff"/><path d="M28 650h20M28 658h32" stroke="#c9d3e6" stroke-width="2"/>
+    <text x="22" y="684" font-size="9" fill="#6f7695">1 · 6 obj</text>
+    <rect x="126" y="632" width="106" height="56" rx="8" fill="#1c2033" stroke="#8b7dff" stroke-width="2"/>
+    <rect x="132" y="638" width="94" height="38" rx="4" fill="#fff"/>
+    <text x="60" y="666" font-size="14" font-weight="700" fill="#33405a" transform="translate(80,10)">Fractions</text>
+    <text x="134" y="684" font-size="9" fill="#9aa1c0">2 · 14 obj</text>
+    <rect x="240" y="634" width="104" height="52" rx="8" fill="#1c2033" stroke="#ffffff22"/>
+    <rect x="246" y="640" width="92" height="34" rx="4" fill="#fff"/><path d="M254 650h24M254 658h16" stroke="#c9d3e6" stroke-width="2"/>
+    <text x="248" y="684" font-size="9" fill="#6f7695">3 · 8 obj</text>
+    <rect x="352" y="634" width="60" height="52" rx="8" fill="none" stroke="#ffffff2e" stroke-dasharray="5 4"/>
+    <path d="M382 654v12M376 660h12" stroke="#9aa1c0" stroke-width="1.8"/>
+  </g>
+</svg>
