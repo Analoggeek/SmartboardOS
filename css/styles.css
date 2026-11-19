@@ -921,3 +921,12 @@ html[data-wallpaper="paper"] .cheats div{ color:#5a4a36; }
 .card:hover::after{ opacity:1; }
 .card > *{ position:relative; z-index:1; }
 @media (prefers-reduced-motion: reduce){ .card::after{ display:none; } }
+
+/* 15 · Touch devices: no hover, so reveal affordances and enlarge targets -- */
+@media (hover: none) {
+  .tl{ width: 17px; height: 17px; font-size: 10px; }
+  .win__lights{ gap: 9px; }
+  .tl__glyph{ opacity: 1; }
+  .widget__close{ opacity: 1; }
+  .dockitem:hover, .app-tile:hover, .tile:hover, .card:hover{ transform: none; }
+}

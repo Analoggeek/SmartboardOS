@@ -296,7 +296,8 @@ function initTilt() {
    ———————————————————————————————————————————————————————————— */
 async function refreshStats() {
   try {
-    const board = await db.get('boards', 'current');
+    let board = await db.get('boards', 'current');
+    if (!board?.pages?.length) board = ls.get('boardMirror', null);
     const pages = board?.pages || [];
     const objects = pages.reduce((n, p) => n + (p.objects?.length || 0), 0);
     const notes = (ls.get('notes', []) || []).length;
