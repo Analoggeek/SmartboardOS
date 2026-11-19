@@ -1,0 +1,50 @@
+name: Deploy SmartBoardOS to Netlify
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: netlify
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Netlify needs two repository secrets (Settings → Secrets and variables → Actions):
+      #   NETLIFY_AUTH_TOKEN  – personal access token from app.netlify.com/user/applications
+      #   NETLIFY_SITE_ID     – Site configuration → Site information → API ID
+      - name: Check Netlify credentials
+        id: check
+        env:
+          TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          SITE: ${{ secrets.NETLIFY_SITE_ID }}
+        run: |
+          if [ -n "$TOKEN" ] && [ -n "$SITE" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Netlify secrets missing::Add NETLIFY_AUTH_TOKEN and NETLIFY_SITE_ID in Settings → Secrets and variables → Actions. Until then use Netlify Drop (drag the zip) or the Netlify GitHub app."
+          fi
+
+      - name: Stage the static site
+        if: steps.check.outputs.ready == 'true'
+        run: |
+          mkdir -p _site
+          rsync -a \
+            --exclude '.git' --exclude '.github' --exclude 'docs' \
+            --exclude 'node_modules' --exclude '*.zip' --exclude 'README.md' \
+            --exclude 'LICENSE' --exclude 'netlify.toml' \
+            ./ _site/
+
+      - name: Deploy to Netlify
+        if: steps.check.outputs.ready == 'true'
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+        run: npx --yes netlify-cli@17 deploy --prod --dir=_site --message "SmartBoardOS ${{ github.sha }}"

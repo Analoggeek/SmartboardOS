@@ -60,6 +60,32 @@ open **Settings → Pages**, set *Source* to **GitHub Actions**, then re-run the
 > First load needs the network; after that the service worker serves the whole OS offline. Bump
 > `VERSION` in `sw.js` for every release so old caches are dropped cleanly.
 
+## Deploy to Netlify
+
+Netlify is the quickest option because there is **no build step** — the repo root is the site and
+`netlify.toml` already sets `publish = "."`, long-cache headers for `vendor/` + `assets/`, and
+`no-cache` for `sw.js` so updates land immediately.
+
+**A · Netlify Drop (fastest, no repo access needed)**
+1. Download this repository as a ZIP (or use the generated `smartboardos-netlify.zip`).
+2. Open **https://app.netlify.com/drop** and drag the ZIP in.
+3. You get a live `https://<random>.netlify.app` URL in ~20 seconds. Rename the site in
+   *Site configuration → Change site name* for a tidy URL.
+
+**B · Import from GitHub (auto-deploy on every push)**
+1. **https://app.netlify.com/start** → *Import an existing project* → **GitHub** → pick
+   `Analoggeek/SmartboardOS`.
+2. Leave **Build command** empty, set **Publish directory** to `.` (already read from `netlify.toml`).
+3. *Deploy site*. Every push to `main` now deploys automatically.
+
+**C · GitHub Actions with secrets (CI deploy)**
+1. Create a token at **https://app.netlify.com/user/applications#personal-access-tokens** and copy
+   the site's **API ID** from *Site configuration → Site information*.
+2. In the repo: **Settings → Secrets and variables → Actions** → add
+   `NETLIFY_AUTH_TOKEN` and `NETLIFY_SITE_ID`.
+3. The workflow `.github/workflows/deploy-netlify.yml` deploys `main` to production on every push
+   (and can be run manually). Without those secrets it finishes green with a notice.
+
 ## Pen & tablet support
 
 Works with Wacom, Huion, XP-Pen, Apple Pencil, S Pen, USI pens and touch-laptop digitizers because it
@@ -125,7 +151,9 @@ js/
 vendor/                    pdf.js 3.11.174 · jsPDF 2.5.1 · three.js 0.160.1
 assets/icons/              favicon + 192/512/maskable/apple-touch icons
 docs/                      preview artwork
-.github/workflows/deploy.yml
+netlify.toml               Netlify: publish root, cache + security headers
+.github/workflows/deploy.yml          GitHub Pages
+.github/workflows/deploy-netlify.yml  Netlify (secrets-based, optional)
 ```
 
 ## Build quality notes
