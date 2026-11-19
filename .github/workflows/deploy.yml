@@ -17,23 +17,40 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      pages: ${{ steps.check.outputs.enabled }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # GitHub Pages needs to be switched on once in repo settings:
+      # Settings → Pages → Build and deployment → Source: GitHub Actions
+      # We detect it here so `main` never shows a red X before that one click.
+      - name: Check whether Pages is enabled
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh api "repos/${{ github.repository }}/pages" > /dev/null 2>&1; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=GitHub Pages is not enabled yet::Open Settings → Pages → Build and deployment → Source: GitHub Actions, then re-run this workflow."
+          fi
+
       - name: Configure Pages
+        if: steps.check.outputs.enabled == 'true'
         uses: actions/configure-pages@v5
-        with:
-          # enables Pages (Actions source) automatically on the first run
-          enablement: true
 
       - name: Upload static site
+        if: steps.check.outputs.enabled == 'true'
         uses: actions/upload-pages-artifact@v3
         with:
           path: .
 
   deploy:
     needs: build
+    if: needs.build.outputs.pages == 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages

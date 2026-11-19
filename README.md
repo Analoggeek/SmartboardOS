@@ -51,8 +51,11 @@ Camera features need a secure context: `https://` or `http://localhost`.
 2. In **Settings → Pages → Build and deployment**, choose **Source: GitHub Actions**.
 3. The workflow at `.github/workflows/deploy.yml` deploys the repo root on every push to `main`
    (and can be run manually from the Actions tab).
-4. Your OS is live at `https://<user>.github.io/<repo>/`. All URLs are relative (`./js/...`), so a
+4. Your OS is live at **https://analoggeek.github.io/SmartboardOS/**. All URLs are relative (`./js/...`), so a
    sub-path just works, and `.nojekyll` keeps GitHub from filtering any file.
+
+If the deploy workflow finishes green but nothing is published, Pages has not been switched on yet:
+open **Settings → Pages**, set *Source* to **GitHub Actions**, then re-run the workflow (or push again).
 
 > First load needs the network; after that the service worker serves the whole OS offline. Bump
 > `VERSION` in `sw.js` for every release so old caches are dropped cleanly.
