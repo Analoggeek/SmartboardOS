@@ -103,6 +103,9 @@ export function mount({ body, api, os, options }) {
     });
     wrap.append(el('div', {}, el('div', { class: 'setrow', style: { marginBottom: '8px' } }, el('div', { text: 'Wallpaper' })), walls));
     wrap.append(toggleRow('Animations', 'Turn off for older laptops or test days.', settings.motion, (v) => save({ motion: v })));
+    wrap.append(segmented('Performance', [
+      { value: 'auto', label: 'Auto' }, { value: 'high', label: 'Best looks' }, { value: 'low', label: 'Smoothest' },
+    ], settings.fx || 'auto', (v) => save({ fx: v })));
     return wrap;
   }
 
@@ -239,9 +242,9 @@ export function mount({ body, api, os, options }) {
         el('div', { style: { fontWeight: '700', fontSize: '16px' }, text: 'SmartBoardOS' }),
         el('div', { class: 'hint', text: `Version ${VERSION} · offline-first · data stays on device` })
       )));
-    wrap.append(el('p', { class: 'hint', text: 'A complete teacher’s hub in one tab: whiteboard, PDF studio, class tools, 3D lab, notes and calculator. No accounts, no uploads, no analytics, no network calls at runtime.' }));
+    wrap.append(el('p', { class: 'hint', text: 'A complete teacher’s hub in one tab: whiteboard, PDF studio, class tools, notes and calculator. No accounts, no uploads, no analytics, no network calls at runtime.' }));
     wrap.append(el('div', { class: 'setrow' }, el('div', { text: 'Licence' }), el('span', { class: 'badge', text: 'MIT' })));
-    wrap.append(el('div', { class: 'setrow' }, el('div', { text: 'Third-party libraries' }), el('span', { class: 'badge', text: 'pdf.js · jsPDF · three.js' })));
+    wrap.append(el('div', { class: 'setrow' }, el('div', { text: 'Third-party libraries' }), el('span', { class: 'badge', text: 'pdf.js · jsPDF' })));
     return wrap;
   }
 

@@ -97,6 +97,17 @@ export class WindowManager {
     if (mobile) {
       win.classList.add('is-maximized');
       state.maximized = true;
+    } else if (def.maximized) {
+      // apps that want the whole desk (whiteboard) open like this straight away
+      state.prevRect = { ...state.rect };
+      state.maximized = true;
+      win.classList.add('is-maximized');
+      state.rect = {
+        x: 8, y: 8,
+        w: Math.round(layerRect.width - 16),
+        h: Math.round(layerRect.height - this.dockClearance),
+      };
+      paint();
     }
 
     this.layer.append(win);
@@ -108,6 +119,7 @@ export class WindowManager {
       close: () => this.close(def.id),
       minimize: () => this.minimize(def.id),
       toggleMaximize: () => this.toggleMaximize(def.id),
+      isMaximized: () => state.maximized,
       setTitle: (text) => { titleWrap.querySelector('span').textContent = text; },
       setSubtitle: (text) => {
         let em = titleWrap.querySelector('em');

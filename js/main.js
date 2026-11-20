@@ -14,7 +14,8 @@ import { openCamera } from './camera.js';
 const APPS = {
   board: {
     name: 'Whiteboard', tagline: 'Draw, annotate, teach', icon: 'board', color: '#8b7dff',
-    width: 1080, height: 700, key: 'Ctrl ⇧ W', load: () => import('./apps/whiteboard.js'),
+    width: 1080, height: 700, key: 'Ctrl ⇧ W', maximized: true,
+    load: () => import('./apps/whiteboard.js'),
   },
   pdf: {
     name: 'PDF Studio', tagline: 'Present & annotate PDFs', icon: 'pdf', color: '#ff8f6b',
@@ -27,10 +28,6 @@ const APPS = {
   media: {
     name: 'Media', tagline: 'On-device image library', icon: 'media', color: '#5ad1ff',
     width: 900, height: 600, load: () => import('./apps/media.js'),
-  },
-  lab3d: {
-    name: '3D Lab', tagline: '14 teaching models', icon: 'lab', color: '#c8a7ff',
-    width: 980, height: 660, load: () => import('./apps/lab3d.js'),
   },
   notes: {
     name: 'Notes', tagline: 'Autosaving lesson notes', icon: 'notes', color: '#fbbf24',
@@ -74,12 +71,24 @@ const OS = {
   installPrompt: null,
 };
 
+function resolveFx(s) {
+  if (s.fx === 'low') return 'low';
+  if (s.fx === 'high') return 'high';
+  // auto: drop heavy effects on small screens, reduced-motion users and low-core devices
+  if (!s.motion) return 'low';
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return 'low';
+  if (window.matchMedia('(max-width: 820px)').matches) return 'low';
+  if ((navigator.hardwareConcurrency || 8) <= 4) return 'low';
+  return 'high';
+}
+
 function applySettings() {
   const html = document.documentElement;
   html.dataset.theme = settings.theme;
   html.dataset.accent = settings.accent;
   html.dataset.wallpaper = settings.wallpaper;
   html.dataset.motion = settings.motion ? 'on' : 'off';
+  html.dataset.fx = resolveFx(settings);
   const meta = document.querySelector('meta[name="theme-color"]');
   if (meta) meta.setAttribute('content', settings.theme === 'dark' ? '#080a12' : '#eef1fa');
   updateGreeting();
@@ -161,6 +170,7 @@ async function openApp(id, options = {}) {
       icon: icon(app.icon),
       width: app.width,
       height: app.height,
+      maximized: app.maximized === true,
       mount: (ctx) => mod.mount({ ...ctx, os: OS, options }),
     });
     return api;
@@ -174,7 +184,7 @@ async function openApp(id, options = {}) {
 /* ————————————————————————————————————————————————————————————
    Dock
    ———————————————————————————————————————————————————————————— */
-const dockOrder = ['board', 'pdf', 'class', 'media', 'lab3d', 'notes', 'calculator', 'settings'];
+const dockOrder = ['board', 'pdf', 'class', 'media', 'notes', 'calculator', 'settings'];
 function buildDock() {
   const dock = $('#dock');
   dock.innerHTML = '';
@@ -271,6 +281,7 @@ function initTilt() {
   cards.forEach((card) => {
     card.addEventListener('pointermove', (ev) => {
       if (ev.pointerType === 'touch' || window.innerWidth < 900) return;
+      if (document.documentElement.dataset.fx === 'low') return;
       const r = card.getBoundingClientRect();
       const px = (ev.clientX - r.left) / r.width - 0.5;
       const py = (ev.clientY - r.top) / r.height - 0.5;
@@ -282,6 +293,7 @@ function initTilt() {
   });
   window.addEventListener('pointermove', (ev) => {
     if (ev.pointerType === 'touch') return;
+    if (document.documentElement.dataset.fx === 'low') return;
     const x = (ev.clientX / window.innerWidth - 0.5) * 2;
     const y = (ev.clientY / window.innerHeight - 0.5) * 2;
     document.body.style.setProperty('--px', x.toFixed(3));
@@ -586,7 +598,6 @@ function initShell() {
       if (action === 'open-board') openApp('board');
       if (action === 'open-pdf') openApp('pdf');
       if (action === 'open-class') openApp('class');
-      if (action === 'open-lab') openApp('lab3d');
       if (action === 'export-pdf') {
         await openApp('board');
         OS.boardApi?.exportPDF();
@@ -632,7 +643,7 @@ refreshStats();
 bootSequence();
 setInterval(refreshStats, 20000);
 
-/* PWA shortcuts: ?app=board / pdf / class / lab3d / notes */
+/* PWA shortcuts: ?app=board / pdf / class / notes */
 try {
   const wanted = new URLSearchParams(location.search).get('app');
   if (wanted && APPS[wanted]) setTimeout(() => openApp(wanted), 750);
