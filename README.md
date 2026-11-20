@@ -5,6 +5,11 @@ No backend, no accounts, no uploads, no analytics, and zero network requests aft
 
 ![SmartBoardOS desktop](docs/preview.svg)
 
+> **v1.4 “smooth” update** — 3D glossy app icons, a fullscreen whiteboard that opens edge-to-edge,
+> a fixed text tool you can actually type into (plus double-click to edit any label), auto
+> performance mode, and a responsive pass for phones/tablets. The 3D Lab has been removed to keep
+> the OS light and fast.
+
 ![SmartBoardOS whiteboard](docs/whiteboard.svg)
 
 ---
@@ -23,14 +28,13 @@ static files that work from GitHub Pages (including a `/repo-name/` sub-path) an
 
 | App | What it does |
 | --- | --- |
-| **Whiteboard** | Pressure-aware pen, highlighter, eraser, laser, shapes, text, stickers, camera, select/move/scale, unlimited pages with live thumbnails, 6 page backgrounds, undo/redo, autosave, PNG and multi-page PDF export. |
+| **Whiteboard** | Pressure-aware pen, highlighter, eraser, laser, shapes, text, stickers, camera, select/move/scale, unlimited pages with live thumbnails, 6 page backgrounds, undo/redo, autosave, PNG and multi-page PDF export, and a true fullscreen board (Shift+F). |
 | **PDF Studio** | Open local PDFs (drag & drop or picker), thumbnail sidebar, zoom, rotate, recent files stored on device, send any page to the whiteboard as an annotation background. |
 | **Class Tools** | Random student picker with confetti, spinning name wheel, class timer with chime, stopwatch with laps, team scoreboard, dice. |
 | **Media** | On-device image library in IndexedDB: upload, send to board, download, delete. |
-| **3D Lab** | 14 three.js teaching models (solids + solar system, H₂O, CO₂, CH₄, DNA), orbit, pinch zoom, auto-spin, wireframe, teaching notes, snapshot → whiteboard. |
 | **Notes** | Autosaving lesson notes, search, trash with restore, Markdown export. |
 | **Calculator** | Keyboard-friendly, live preview, history, and a real recursive-descent parser — never `eval`. |
-| **Settings** | Theme, 5 accents, 4 wallpapers, motion; teacher name and 24-hour clock; pen & palm panel with camera test; install button, offline badge, JSON backup and full reset; about. |
+| **Settings** | Theme, 5 accents, 4 wallpapers, motion, performance mode; teacher name and 24-hour clock; pen & palm panel with camera test; install button, offline badge, JSON backup and full reset; about. |
 
 ## Quick start
 
@@ -109,7 +113,8 @@ reads standard Pointer Events:
 | `Ctrl/⌘ Shift W` | Whiteboard |
 | `Ctrl/⌘ Shift P` | PDF Studio |
 | `Ctrl/⌘ Shift T` | Class Tools |
-| `F` | Fullscreen |
+| `F` | Fullscreen the OS |
+| `Shift F` | Fullscreen the whiteboard (hides top bar + dock) |
 | `S P H E L A R O T Z V` | Select · Pen · Highlighter · Eraser · Line · Arrow · Rectangle · Ellipse · Text · Laser · Pan |
 | `[` `]` | Brush size |
 | `Ctrl/⌘ Z` / `Ctrl/⌘ Shift Z` | Undo / redo |
@@ -123,7 +128,7 @@ reads standard Pointer Events:
 - **localStorage** — settings, notes, student list, team scores, sticky note, widget list, window
   geometry, plus a mirror of the board that is flushed on `pagehide`.
 
-Nothing is uploaded. There are no third-party requests at runtime; pdf.js, jsPDF and three.js are
+Nothing is uploaded. There are no third-party requests at runtime; pdf.js and jsPDF are
 vendored under `vendor/` and icons and emoji are bundled vector art. The service worker refuses to
 handle cross-origin requests.
 
@@ -146,9 +151,9 @@ js/
   camera.js                camera sheet
   emoji-data.js            ~80 emoji as bundled SVG data URIs
   apps/
-    whiteboard.js  pdf.js  media.js  class.js  lab3d.js
+    whiteboard.js  pdf.js  media.js  class.js
     notes.js  calculator.js  settings.js
-vendor/                    pdf.js 3.11.174 · jsPDF 2.5.1 · three.js 0.160.1
+vendor/                    pdf.js 3.11.174 · jsPDF 2.5.1
 assets/icons/              favicon + 192/512/maskable/apple-touch icons
 docs/                      preview artwork
 netlify.toml               Netlify: publish root, cache + security headers
@@ -171,4 +176,4 @@ netlify.toml               Netlify: publish root, cache + security headers
 ## Licences
 
 SmartBoardOS is MIT licensed. Bundled third-party libraries keep their own licences:
-pdf.js 3.11.174 (Apache-2.0), jsPDF 2.5.1 (MIT), three.js 0.160.1 (MIT).
+pdf.js 3.11.174 (Apache-2.0) and jsPDF 2.5.1 (MIT).

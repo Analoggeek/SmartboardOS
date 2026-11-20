@@ -2,7 +2,7 @@
    Bump VERSION on every release: the old cache is dropped on activate and the
    page reloads cleanly once the new shell is cached. */
 
-const VERSION = '1.3.0';
+const VERSION = '1.4.0';
 const CACHE = `smartboardos-${VERSION}`;
 
 const PRECACHE = [
@@ -24,14 +24,12 @@ const PRECACHE = [
   './js/apps/pdf.js',
   './js/apps/media.js',
   './js/apps/class.js',
-  './js/apps/lab3d.js',
   './js/apps/notes.js',
   './js/apps/calculator.js',
   './js/apps/settings.js',
   './vendor/pdf.min.js',
   './vendor/pdf.worker.min.js',
   './vendor/jspdf.umd.min.js',
-  './vendor/three.module.min.js',
   './assets/icons/favicon.svg',
   './assets/icons/icon-192.png',
   './assets/icons/icon-512.png',

@@ -134,6 +134,7 @@ export const DEFAULTS = {
   accent: 'violet',
   wallpaper: 'aurora',
   motion: true,
+  fx: 'auto',
   use24: false,
   teacherName: '',
   widgets: ['clock', 'timer', 'sticky', 'dice'],

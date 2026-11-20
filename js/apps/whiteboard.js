@@ -91,7 +91,7 @@ export function mount({ body, win, api, os }) {
     const rect = stageEl.getBoundingClientRect();
     cssW = Math.max(1, Math.floor(rect.width));
     cssH = Math.max(1, Math.floor(rect.height));
-    dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = Math.round(cssW * dpr);
     canvas.height = Math.round(cssH * dpr);
     canvas.style.width = cssW + 'px';
@@ -320,7 +320,10 @@ export function mount({ body, win, api, os }) {
     ctx.save();
     ctx.translate(view.ox, view.oy);
     ctx.scale(view.scale, view.scale);
-    for (const obj of page().objects) drawObject(obj);
+    for (const obj of page().objects) {
+      if (textEditor?.editId && obj.id === textEditor.editId) continue;
+      drawObject(obj);
+    }
     if (live) drawObject(live);
     ctx.restore();
     if (selected) drawSelection();
@@ -503,6 +506,7 @@ export function mount({ body, win, api, os }) {
     drawing = null; live = null;
     settings.board.tool = tool;
     os.saveSettings({ board: settings.board }, true);
+    if (tool === 'text' && !textEditor) toast('Tap the board and type — Enter finishes, Shift+Enter adds a line');
     invalidate(); updateBadges();
   }
 
@@ -607,6 +611,8 @@ export function mount({ body, win, api, os }) {
     mk('download', 'Export page as PNG', exportPNG, 'Export page as PNG');
     mk('pdf', 'Export all pages as PDF', exportPDF, 'Export all pages as PDF');
     mk('trash', 'Clear this page', clearPage, 'Clear page');
+    fsButton = mk('expand', 'Fullscreen board (Shift+F)', toggleBoardFullscreen, 'Fullscreen board');
+    fsButton.setAttribute('aria-pressed', 'false');
   }
 
   function buildFloatingToolbox() {
@@ -914,6 +920,7 @@ export function mount({ body, win, api, os }) {
     }
 
     if (state.tool === 'text') {
+      ev.preventDefault();
       beginText(pt);
       return;
     }
@@ -1114,51 +1121,138 @@ export function mount({ body, win, api, os }) {
   }
 
   /* ———————————————————————— text tool ———————————————————————— */
-  function beginText(worldPt) {
+  function beginText(worldPt, opts = {}) {
     if (textEditor) commitText();
-    const size = clamp(24, 8, 220);
-    const ta = el('textarea', { class: 'wb__textinput', rows: 1, 'aria-label': 'Text on board' });
-    const left = worldPt.x * view.scale + view.ox;
-    const top = worldPt.y * view.scale + view.oy;
+    const size = clamp(opts.size || 26, 8, 220);
+    const ta = el('textarea', {
+      class: 'wb__textinput', rows: 1, spellcheck: 'false',
+      'aria-label': 'Text on board', placeholder: 'Type here…',
+    });
+    ta.value = opts.text || '';
+    const origin = { x: opts.x ?? worldPt.x, y: opts.y ?? worldPt.y };
+    const left = origin.x * view.scale + view.ox;
+    const top = origin.y * view.scale + view.oy;
     Object.assign(ta.style, {
       left: Math.max(2, left) + 'px', top: Math.max(2, top) + 'px',
-      fontSize: Math.max(12, size * view.scale) + 'px',
-      color: state.color, lineHeight: '1.3',
+      fontSize: Math.max(13, size * view.scale) + 'px',
+      color: state.color || '#1a2233', lineHeight: '1.32',
+      minWidth: Math.max(120, Math.min(cssW - left - 16, 320)) + 'px',
     });
     stageEl.append(ta);
-    ta.focus();
-    const ed = { ta, worldPt, size, committed: false };
+
+    const ed = { ta, worldPt: origin, size, editId: opts.id || null, ready: false, cancel: false };
     textEditor = ed;
-    const commit = () => commitText();
-    ta.addEventListener('blur', commit);
+    const autoGrow = () => {
+      ta.style.height = 'auto';
+      ta.style.height = Math.max(ta.scrollHeight, size * view.scale + 12) + 'px';
+      ta.style.width = 'auto';
+      ta.style.width = Math.max(120, Math.min(cssW - parseFloat(ta.style.left) - 16, ta.scrollWidth + 24)) + 'px';
+    };
+    autoGrow();
+
+    // Focus after the pointer sequence finishes, otherwise the canvas can steal it back.
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      if (textEditor !== ed) return;
+      ed.ready = true;
+      ta.focus({ preventScroll: true });
+      ta.setSelectionRange(ta.value.length, ta.value.length);
+      autoGrow();
+    }));
+
+    ta.addEventListener('pointerdown', (ev) => ev.stopPropagation());
+    ta.addEventListener('click', (ev) => ev.stopPropagation());
+    ta.addEventListener('input', autoGrow);
+    ta.addEventListener('blur', () => { if (ed.ready) commitText(); });
     ta.addEventListener('keydown', (ev) => {
       ev.stopPropagation();
-      if (ev.key === 'Escape') { ed.cancel = true; ta.blur(); }
-      if (ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); commit(); }
+      if (ev.key === 'Escape') { ev.preventDefault(); ed.cancel = true; ta.blur(); }
+      if (ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); commitText(); }
     });
-    const autoGrow = () => { ta.style.height = 'auto'; ta.style.height = ta.scrollHeight + 'px'; };
-    ta.addEventListener('input', autoGrow);
   }
 
   function commitText() {
     const ed = textEditor;
     if (!ed) return;
     textEditor = null;
-    ed.committed = true;
     const value = ed.ta.value.replace(/\s+$/, '');
     const cancel = ed.cancel;
     ed.ta.remove();
-    if (!cancel && value.trim()) {
-      pushUndo();
-      page().objects.push({
-        id: uid('o'), type: 'text', x: ed.worldPt.x, y: ed.worldPt.y,
-        text: value, color: state.color, size: ed.size,
-      });
-      invalidate(); scheduleSave(); refreshThumbs(); updateBadges();
-    }
     invalidate();
+
+    if (cancel) return;
+    if (ed.editId) {
+      const obj = page().objects.find((o) => o.id === ed.editId);
+      if (!obj) return;
+      pushUndo();
+      if (value.trim()) {
+        obj.text = value;
+        obj.color = state.color;
+        obj.size = ed.size;
+        obj.x = ed.worldPt.x;
+        obj.y = ed.worldPt.y;
+      } else {
+        page().objects = page().objects.filter((o) => o.id !== ed.editId);
+      }
+      scheduleSave(); refreshThumbs(); updateBadges();
+      return;
+    }
+    if (!value.trim()) return;
+    pushUndo();
+    page().objects.push({
+      id: uid('o'), type: 'text', x: ed.worldPt.x, y: ed.worldPt.y,
+      text: value, color: state.color || '#1a2233', size: ed.size,
+    });
+    scheduleSave(); refreshThumbs(); updateBadges();
   }
 
+  /* ———————————————————————— fullscreen ———————————————————————— */
+  let cssFullscreen = false;
+  let fsButton = null;
+
+  function syncFullscreenButton() {
+    if (!fsButton) return;
+    const on = !!(document.fullscreenElement || cssFullscreen);
+    fsButton.classList.toggle('is-active', on);
+    fsButton.setAttribute('aria-pressed', on ? 'true' : 'false');
+    fsButton.title = on ? 'Exit fullscreen board (Shift+F)' : 'Fullscreen board (Shift+F)';
+  }
+
+  function setCssFullscreen(on) {
+    cssFullscreen = on;
+    document.body.classList.toggle('wb-fs', on);
+    if (on && api && !api.isMaximized?.()) api.toggleMaximize?.();
+    requestAnimationFrame(() => {
+      window.dispatchEvent(new Event('resize'));
+      resizeCanvas();
+      invalidate();
+    });
+    setTimeout(() => { resizeCanvas(); invalidate(); }, 260);
+    syncFullscreenButton();
+  }
+
+  function toggleBoardFullscreen() {
+    if (document.fullscreenElement) {
+      document.exitFullscreen?.().catch(() => {});
+      return;
+    }
+    if (cssFullscreen) { setCssFullscreen(false); return; }
+    const request = win.requestFullscreen || win.webkitRequestFullscreen;
+    if (request) {
+      try {
+        const result = request.call(win);
+        if (result?.catch) result.catch(() => setCssFullscreen(true));
+      } catch { setCssFullscreen(true); }
+    } else {
+      setCssFullscreen(true);
+    }
+    syncFullscreenButton();
+  }
+
+  function onFullscreenChange() {
+    setTimeout(() => { resizeCanvas(); invalidate(); syncFullscreenButton(); }, 80);
+  }
+
+  /* ———————————————————————— images / stickers / camera ———————————————————————— */
   /* ———————————————————————— images / stickers / camera ———————————————————————— */
   function insertImage(src, { source = 'image' } = {}) {
     loadImage(src).then((img) => {
@@ -1377,6 +1471,11 @@ export function mount({ body, win, api, os }) {
       }
       return;
     }
+    if (ev.shiftKey && k === 'f') {
+      ev.preventDefault(); ev.stopPropagation();
+      toggleBoardFullscreen();
+      return;
+    }
     if (mod) return;
     if (ev.key === '[' || ev.key === ']') {
       ev.preventDefault();
@@ -1387,6 +1486,7 @@ export function mount({ body, win, api, os }) {
       return;
     }
     if (ev.key === 'Escape') {
+      if (cssFullscreen) { setCssFullscreen(false); return; }
       if (state.sticker) { state.sticker = null; toast('Sticker cancelled'); }
       else if (selected) { selected = null; invalidate(); updateBadges(); }
       else if (drawing) { cancelGesture(); }
@@ -1470,10 +1570,20 @@ export function mount({ body, win, api, os }) {
   canvas.addEventListener('lostpointercapture', pointerUp);
   canvas.addEventListener('wheel', onWheel, { passive: false });
   canvas.addEventListener('contextmenu', (ev) => ev.preventDefault());
+  canvas.addEventListener('dblclick', (ev) => {
+    if (state.tool !== 'select') return;
+    const obj = hitTest(toWorld(ev));
+    if (obj?.type === 'text') {
+      selected = null;
+      invalidate();
+      beginText({ x: obj.x, y: obj.y }, { id: obj.id, text: obj.text, size: obj.size });
+    }
+  });
   canvas.addEventListener('dragover', (ev) => { ev.preventDefault(); stageEl.classList.add('is-drop'); });
   canvas.addEventListener('dragleave', () => stageEl.classList.remove('is-drop'));
   canvas.addEventListener('drop', onDrop);
   window.addEventListener('keydown', onKeyDown, true);
+  document.addEventListener('fullscreenchange', onFullscreenChange);
   window.addEventListener('pagehide', () => { saveNow(); });
 
   const ro = new ResizeObserver(() => { resizeCanvas(); });
@@ -1507,6 +1617,7 @@ export function mount({ body, win, api, os }) {
     undo,
     redo,
     saveNow,
+    toggleFullscreen: toggleBoardFullscreen,
     zoomBy,
     resetZoom,
     get state() { return { pages: board.pages, activePage: board.activePage, view: { ...view }, tool: state.tool }; },
@@ -1534,7 +1645,10 @@ export function mount({ body, win, api, os }) {
     cancelAnimationFrame(rafId);
     clearInterval(toolbarSync);
     window.removeEventListener('keydown', onKeyDown, true);
+    document.removeEventListener('fullscreenchange', onFullscreenChange);
     window.removeEventListener('pagehide', saveNow);
+    document.body.classList.remove('wb-fs');
+    if (document.fullscreenElement) document.exitFullscreen?.().catch(() => {});
     ro.disconnect();
     saveNow();
     os.unregisterBoard(boardApi);
